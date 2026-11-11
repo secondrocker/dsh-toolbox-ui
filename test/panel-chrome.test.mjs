@@ -373,6 +373,9 @@ test('切换到项目时立即作废旧作用域列表，不在请求途中显�
           return Promise.resolve({ ok: true, updateAvailable: false })
         } else if (method === 'tools') {
           return Promise.resolve({ ok: true, tools: [{ name: args.name + '-tool' }] })
+        } else if (method === 'toolOverrides') {
+          // 参数覆盖表：选中服务器时随工具列表一起取一次（合法调用，见 McpTab 的 effect）。
+          return Promise.resolve({ ok: true, overrides: {} })
         }
         // 生产组件可能捕获 RPC 错误；另外记录并断言，让额外/错作用域调用仍然使测试失败。
         unexpectedCalls.push({ method, args })
@@ -816,8 +819,9 @@ test('外部源（skillhub.cn）：安装走同一套落点，但闸门换成披
   // commit，抓默认分支不可复现），现在钉的是**不再有任何别的安装入口**。
   assert.equal((clientSource.match(/await (?:call|act)\('skillHubInstall'/g) ?? []).length, 1,
     '安装只能有一个入口：skillHubInstall')
-  // 落点是**同一份** installTargets，两个能力面不各建一套
-  assert.equal((clientSource.match(/scopeOptions: installTargets/g) ?? []).length, 1)
+  // 落点是**同一份** installTargets，两个能力面不各建一套；1 → 2：本机外部技能
+  // （Claude / Codex）的导入弹窗加入，消费同一份可写目标清单。
+  assert.equal((clientSource.match(/scopeOptions: installTargets/g) ?? []).length, 2)
 })
 
 test('外部源的两类失败必须分开说：宿主没这接口 ≠ 上游挂了', () => {

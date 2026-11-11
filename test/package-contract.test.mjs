@@ -56,7 +56,7 @@ const CORDIS_LOADER_DEV_BASELINE = process.env.DSH_HOST_MATRIX_LOADER || '~1.0.6
 
 test('package exposes one Web bundle entry', () => {
   assert.equal(packageJson.dsh?.bundle?.patch, './cordis.patch.yml')
-  assert.equal(packageJson.version, '1.11.1')
+  assert.equal(packageJson.version, '1.12.0')
   assert.equal(packageJson.dsh?.client?.platform, 'web')
   // dsh.client.inject 是客户端图里的「工厂先到」依赖边，只能写真实的 client 包名：
   //   @deepseek-ai/dsh-client-runtime  —— 上游 2026-08-22 已删除（be531688 "remove Runtime"）
@@ -429,14 +429,14 @@ test('client moves focus into dialogs so Escape handlers receive keyboard events
   assert.match(dialogCtor, /if \(e\.key !== 'Tab'\) return/, 'Tab 不能逃出模态框')
   assert.match(dialogCtor, /role: 'dialog'/)
   assert.match(dialogCtor, /tabIndex: -1/)
-  // 六个 modal 全部走构造器；有任何一个回去手写内层 div，这里就会掉下来。
-  // 6 → 7 后又合并回 6：搜索参数并进了「工具搜索」弹窗，不再单独开一个。
+  // 每个 modal 都走构造器；有任何一个回去手写内层 div，这里就会掉下来。
+  // 6 → 7：外部技能（Claude / Codex）导入弹窗加入。
   const uses = [...client.matchAll(/h\(Dialog, \{ label: /g)].length
-  assert.equal(uses, 6, `走 Dialog 的对话框数量变了（现在 ${uses} 个）`)
+  assert.equal(uses, 7, `走 Dialog 的对话框数量变了（现在 ${uses} 个）`)
   assert.equal((client.match(/className: 'dsh-mcp-modal' \+ \(cls/g) || []).length, 1, 'modal 的 class 组合只该在 Dialog 里做一次')
-  // 遮罩由调用点渲染一次（七个 modal + 更新卡片自己那层，共八处）。Dialog 内部再套一层就会
-  // 嵌套出两个 overlay——实测踩过，所以钉住。
-  assert.equal((client.match(/className: 'dsh-mcp-overlay'/g) || []).length, 7, '遮罩只在调用点渲染，Dialog 不重复套一层')
+  // 遮罩由调用点渲染一次（每个 modal 一处 + 更新卡片自己那层）。Dialog 内部再套一层就会
+  // 嵌套出两个 overlay——实测踩过，所以钉住。7 → 8：外部技能导入弹窗加入。
+  assert.equal((client.match(/className: 'dsh-mcp-overlay'/g) || []).length, 8, '遮罩只在调用点渲染，Dialog 不重复套一层')
 })
 
 test('the three contract faces list the same methods in the same order', async () => {

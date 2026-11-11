@@ -56,6 +56,7 @@
 **MCP 面**
 
 - 逐条看状态、传输方式、连接参数与**已注册的工具**；展开工具可看完整输入 JSON Schema（必填/可选、类型、枚举、默认值）
+- **运行工具**：展开工具后按 schema 填参数表单（覆盖默认值已预填），直接调试运行，结果显示耗时 / 错误 / 格式化 JSON；**参数覆盖**：逐工具改写默认参数值与参数描述（含工具级描述），**直接改写模型看到的工具 schema**——只允许 default / description 两类改写，不动类型与必填；支持全局（profile patch）与项目（`.dsh/mcp.json`）两级
 - 启停、重连、添加、编辑、移除；凭据类字段默认掩码，点眼睛临时揭示有效运行值并一键复制
 - **全局 + 项目双作用域**：全局写 Web profile（所有项目可用），项目写该项目 `.dsh/mcp.json`（只该项目会话可见）；项目里还能「屏蔽」某个全局 MCP
 - 从本机其他客户端**导入**：Claude Code、Codex、OpenCode、pi、Claude Desktop、Cursor、Windsurf、VS Code、Gemini CLI、Roo Code 与跨工具共享配置，也能直接粘贴 JSON；写入前预览，支持「合并」与「替换」
@@ -75,6 +76,7 @@
 - **「模型自动调用」开关**：直接改 `SKILL.md` 的 `disable-model-invocation`，关掉=删掉那一行（开→关能逐字节还原原文）；状态一律取自技能文件本身，读不出来就说「未知」而不是猜一个值
 - **定位按磁盘上的真实位置**（不按技能名）：文件/目录名与 frontmatter 的 `name` 不一致的技能照样能读、能启停、能删
 - 市场接 [skillhub.cn](https://skillhub.cn)：安装前披露发布方认证与安全扫描结论，并要一次**显式确认**（该确认在服务端校验）
+- **本机外部技能（Claude / Codex）**：扫描 `~/.claude/skills` 与 `~/.codex/skills`，可搜索、预览正文，确认后**快照复制**导入 DSH 技能根（全局或项目）；与市场安装同一条落盘路径（防重名、拒符号链接、原子提交），导入后即普通 DSH 技能
 
 **公共**
 
@@ -86,10 +88,10 @@
 
 ```sh
 # 推荐：npm 安装 —— 之后 `dsh plugin update` 在 ^1.x 内自动升小版本
-dsh plugin --profile web add dsh-toolbox-ui@^1.11.1
+dsh plugin --profile web add dsh-toolbox-ui@^1.12.0
 
 # 或固定 GitHub release tag（不自动跨版本，升级要换 tag 重新 add）
-dsh plugin --profile web add github:Imzl-zl/dsh-toolbox-ui#v1.11.1
+dsh plugin --profile web add github:Imzl-zl/dsh-toolbox-ui#v1.12.0
 ```
 
 装完**重启 `dsh web`**。卸载（不会删除 profile 里已有的 MCP 条目）：

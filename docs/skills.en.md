@@ -147,14 +147,25 @@ After confirming, choose which scope to install into (Global or a particular pro
 | A skill directory | A directory bundle `<name>/`, along with resources such as `scripts/`, `references/` |
 | An archive | `.zip` / `.tar` / `.tar.gz` / `.tgz`, identified by **magic number** (the download link may carry no extension) |
 
-⚠️ These three shapes currently have **no panel entry point** (only Host RPC), and one-click install goes the external-source archive route. Manual import has to wait until that entry point exists — until then, the panel will not pretend it is there.
+⚠️ The archive shape currently has **no panel entry point** (only Host RPC); the directory and single-file shapes are covered by the "Local external skills" import entry (see the previous section).
 
 Installation is written to disk under the `name` in frontmatter (not the file name) — that is how the Host determines skill identity.
 If a same-named skill already exists it **refuses rather than overwrites**; if an archive contains multiple skills it also refuses (it will not guess which one you meant).
 
+## Local external skills (Claude / Codex)
+
+The "Discover" mode also carries a **local source**: the "Local external skills" segment next to "skillhub.cn market". It scans the Claude (`~/.claude/skills`) and Codex (`~/.codex/skills`) global skill directories under your home directory — both are agents-standard `SKILL.md`, the same origin as DSH skills, so **no format conversion** happens.
+
+- Search happens client-side (a few dozen entries locally) and issues no requests; rows carry a source badge (Claude / Codex);
+- Entries whose name already exists among DSH skills are marked "Imported"; importing them will be refused (duplicate-name protection is a hard rule of the write path);
+- Entries with invalid frontmatter are honestly marked "cannot import + reason", not guessed or silently skipped;
+- Clicking "Import" first opens a preview (the SKILL.md body can be expanded) and destination choice (Global / project, the same "install to" set); after confirmation the skill is **snapshot-copied** into the chosen root — later changes or deletion in the external directory never affect the imported copy;
+- The import goes through the Host's `importSkill` (`type: 'directory'` / `file`): symlink rejection, duplicate-name protection, atomic commit, and Host skill-cache invalidation — the same write path as market installs;
+- After import it is an ordinary DSH skill: enable/disable, invocation faces, and diagnostics all apply as usual.
+
 ## Market sources
 
-The market has exactly one source, **skillhub.cn**, with no source switching. It is an external source, connected directly upstream (`api.skillhub.cn`, public and unauthenticated) for live search and categories, and **it is also the only one-click installable source**. On trust handling it **makes no license determination** (upstream entries carry no license information): before installing it lays out publisher certification, security scan results, and whether an API Key is required, states plainly "this plugin has not verified them", and requires you to **check to confirm** before installing.
+The remote market has exactly one source, **skillhub.cn** (the "Local external skills" segment beside it is a local source — see the previous section). It is an external source, connected directly upstream (`api.skillhub.cn`, public and unauthenticated) for live search and categories, and **it is also the only one-click installable remote source**. On trust handling it **makes no license determination** (upstream entries carry no license information): before installing it lays out publisher certification, security scan results, and whether an API Key is required, states plainly "this plugin has not verified them", and requires you to **check to confirm** before installing.
 
 Requests are issued from the **Host side** — the panel itself does not go online, so there is no browser CORS problem either. Its search is **explicitly triggered** (Enter / switching category), not search-as-you-type; category keys come from upstream and labels come from its category API, and if a label cannot be fetched the raw key is shown.
 

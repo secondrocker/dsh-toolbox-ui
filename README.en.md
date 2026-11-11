@@ -56,6 +56,7 @@ Tool definitions drop from **89.9K** to **9.4K** — **80.5K less (-89.5%)**, ab
 **MCP**
 
 - Per-entry status, transport, connection settings and the **registered tools**; expand a tool for its full input JSON Schema (required/optional, types, enums, defaults)
+- **Run tools**: after expanding a tool, fill the parameter form from its schema (override defaults pre-filled) and debug-run it directly — results show duration / errors / formatted JSON; **Parameter overrides**: per-tool default values and description rewrites (including the tool-level description) that **rewrite the model-visible tool schema** — only default / description changes are allowed, never types or required fields; global (profile patch) and project (`.dsh/mcp.json`) scopes
 - Enable, disable, reconnect, add, edit, remove; credential fields are masked by default — reveal the effective runtime value temporarily and copy it in one click
 - **Global + project scopes**: global writes the Web profile (available to every project), project writes that project's `.dsh/mcp.json` (visible only to its sessions); a project can also **block** a global MCP
 - **Import** configuration from other clients installed on this machine: Claude Code, Codex, OpenCode, pi, Claude Desktop, Cursor, Windsurf, VS Code, Gemini CLI, Roo Code and the cross-tool shared config — or paste JSON directly. Previewed before writing, with merge and replace modes
@@ -75,6 +76,7 @@ Tool definitions drop from **89.9K** to **9.4K** — **80.5K less (-89.5%)**, ab
 - **Model auto-invocation switch**: edits `disable-model-invocation` in `SKILL.md`; turning it off deletes that line (off → on round-trips byte-for-byte). The state always comes from the skill file itself — when it cannot be read the panel says "unknown" instead of guessing
 - **Located by its real position on disk** (never by skill name): skills whose file or directory name differs from the frontmatter `name` can still be read, toggled and removed
 - Market backed by [skillhub.cn](https://skillhub.cn): publisher verification and security-scan findings are disclosed before install, followed by one **explicit confirmation** (validated server-side)
+- **Local external skills (Claude / Codex)**: scans `~/.claude/skills` and `~/.codex/skills` with search and body preview, then **snapshot-copies** the chosen skill into a DSH skill root (global or project); the same write path as market installs (duplicate-name protection, symlink rejection, atomic commit), and the imported skill is an ordinary DSH skill afterwards
 
 **Shared**
 
@@ -86,10 +88,10 @@ Tool definitions drop from **89.9K** to **9.4K** — **80.5K less (-89.5%)**, ab
 
 ```sh
 # Recommended: from npm — `dsh plugin update` then upgrades within ^1.x
-dsh plugin --profile web add dsh-toolbox-ui@^1.11.1
+dsh plugin --profile web add dsh-toolbox-ui@^1.12.0
 
 # Or pin a GitHub release tag (no automatic upgrades; re-add with a new tag)
-dsh plugin --profile web add github:Imzl-zl/dsh-toolbox-ui#v1.11.1
+dsh plugin --profile web add github:Imzl-zl/dsh-toolbox-ui#v1.12.0
 ```
 
 Then **restart `dsh web`**. To uninstall (your existing MCP entries stay):
