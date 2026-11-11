@@ -190,7 +190,7 @@ test('能力层按 MCP、技能、工具顺序渲染，工具页独立承载加�
   assert.ok(start > 0 && end > start, '找不到能力层定义')
   const body = clientSource.slice(start, end)
   const ids = [...body.matchAll(/id: '([^']+)'/g)].map((match) => match[1])
-  assert.deepEqual(ids, ['mcp', 'skills', 'tool-loading'])
+  assert.deepEqual(ids, ['mcp', 'skills', 'tool-loading', 'commands'])
   assert.match(body, /id: 'tool-loading',[\s\S]*label: '工具'/)
   assert.match(clientSource, /ability === 'tool-loading'/, '工具标签必须切换到独立工具页')
   assert.match(clientSource, /onToggleDefer: toggleDeferOne/, 'MCP 页必须继续持有服务器延迟开关')

@@ -432,11 +432,12 @@ test('client moves focus into dialogs so Escape handlers receive keyboard events
   // 每个 modal 都走构造器；有任何一个回去手写内层 div，这里就会掉下来。
   // 6 → 7：外部技能（Claude / Codex）导入弹窗加入。
   const uses = [...client.matchAll(/h\(Dialog, \{ label: /g)].length
-  assert.equal(uses, 7, `走 Dialog 的对话框数量变了（现在 ${uses} 个）`)
+  // 7 → 8：Commands 编辑弹窗加入。
+  assert.equal(uses, 8, `走 Dialog 的对话框数量变了（现在 ${uses} 个）`)
   assert.equal((client.match(/className: 'dsh-mcp-modal' \+ \(cls/g) || []).length, 1, 'modal 的 class 组合只该在 Dialog 里做一次')
   // 遮罩由调用点渲染一次（每个 modal 一处 + 更新卡片自己那层）。Dialog 内部再套一层就会
   // 嵌套出两个 overlay——实测踩过，所以钉住。7 → 8：外部技能导入弹窗加入。
-  assert.equal((client.match(/className: 'dsh-mcp-overlay'/g) || []).length, 8, '遮罩只在调用点渲染，Dialog 不重复套一层')
+  assert.equal((client.match(/className: 'dsh-mcp-overlay'/g) || []).length, 9, '遮罩只在调用点渲染，Dialog 不重复套一层')
 })
 
 test('the three contract faces list the same methods in the same order', async () => {

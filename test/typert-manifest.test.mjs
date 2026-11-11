@@ -93,7 +93,8 @@ test('every skills invocation is namespaced, correctly identified and self-consi
   // 37 → 38（1.8.1）：新增 setDefer（行内单台的延迟开关）。
   // 38 → 42（1.10.0）：统一工具加载策略的全局/项目读写四个方法。
   // 42 → 45：工具运行与参数覆盖三个方法（toolOverrides / setToolOverride / runTool）。
-  assert.equal(mcp.length, 45, `MCP 的方法数应保持 45，实际 ${mcp.length}`)
+  // 45 → 49：Commands 管理四个方法复用工具箱宿主命名空间。
+  assert.equal(mcp.length, 49, `工具箱宿主方法数应保持 49，实际 ${mcp.length}`)
 
   for (const invocation of skills) {
     const where = `skills 调用 ${invocation.method}`

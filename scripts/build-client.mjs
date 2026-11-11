@@ -46,6 +46,7 @@ export const PARTS = [
   '60-tool-loading.js',    // 工具页：加载策略与工具表
   '70-shell.js',           // 面板外壳与入口（McpTab、悬浮按钮、更新提示）
   '80-skills-face.js',     // 技能面：列表 / 详情 / 市场
+  '85-commands-face.js',   // Commands 管理面
   '90-contribution.js',    // contribution 描述符 + locale 接线 + apply
 ]
 
